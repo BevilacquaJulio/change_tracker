@@ -1,0 +1,160 @@
+/* === App loading — estado inicial (dados do servidor) === */
+
+.app-loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: min(52vh, 480px);
+  padding: var(--space-2xl) var(--space-xl);
+  animation: loadingEnter var(--duration-slow) var(--ease-out);
+}
+
+.app-loading[hidden] {
+  display: none !important;
+}
+
+.app-loading__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  max-width: 360px;
+  width: 100%;
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.app-loading__spinner-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+.app-loading__spinner-glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.28) 0%, transparent 68%);
+  animation: loadingGlow 2s var(--ease-soft) infinite;
+  pointer-events: none;
+}
+
+.app-loading__spinner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid rgba(59, 130, 246, 0.12);
+  border-top-color: var(--blue-500);
+  border-right-color: var(--blue-400);
+  animation: loadingSpin 0.85s linear infinite;
+}
+
+.app-loading__title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.app-loading__sub {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+.app-loading__dots {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 2px;
+  vertical-align: baseline;
+}
+
+.app-loading__dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blue-400);
+  animation: loadingDot 1.2s var(--ease-soft) infinite;
+}
+
+.app-loading__dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.app-loading__dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.main--hidden {
+  display: none !important;
+}
+
+@keyframes loadingEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loadingGlow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes loadingDot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-loading {
+    animation: none;
+  }
+
+  .app-loading__spinner {
+    animation-duration: 1.4s;
+  }
+
+  .app-loading__spinner-glow,
+  .app-loading__dots span {
+    animation: none;
+    opacity: 0.7;
+  }
+}

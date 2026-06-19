@@ -1,0 +1,129 @@
+/* === Detail view — espelha o layout do formulário de criação (somente leitura) === */
+
+.detail-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.detail-view__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.detail-view__title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detail-view__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.detail-view__field--span2 {
+  grid-column: 1 / -1;
+}
+
+.detail-view__value {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  line-height: var(--line-height-relaxed);
+  white-space: pre-wrap;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--control-padding-y) var(--control-padding-x);
+  min-height: var(--control-height);
+}
+
+.detail-view__value--muted {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.detail-view__value--url {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.detail-view__url-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-blue);
+  word-break: break-all;
+}
+
+.detail-view__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.detail-view__grid .detail-view__field {
+  margin-bottom: 0;
+}
+
+@media (max-width: 560px) {
+  .detail-view__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Urgência somente leitura — mesmo visual do picker */
+.urgency-picker--readonly {
+  pointer-events: none;
+  margin-top: 0;
+}
+
+.urgency-picker--readonly .urgency-picker__option {
+  cursor: default;
+}
+
+.urgency-picker--readonly .urgency-picker__option:not(.is-selected) {
+  opacity: 0.35;
+}
+
+.urgency-picker--readonly .urgency-picker__option.is-selected {
+  opacity: 1;
+}
+
+/* Evidência somente leitura */
+.detail-evidence-box {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  overflow: hidden;
+}
+
+.detail-evidence-box img {
+  display: block;
+  max-width: 100%;
+  max-height: 280px;
+  margin: 0 auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  object-fit: contain;
+}
+
+.detail-view__meta {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}

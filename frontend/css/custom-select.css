@@ -1,0 +1,268 @@
+/* === Custom Select — dropdowns modernos com glass === */
+
+.select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrap .form-select--native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.custom-select__trigger {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: var(--control-padding-y) 40px var(--control-padding-y) var(--control-padding-x);
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  line-height: var(--line-height-tight);
+  transition:
+    border-color var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft),
+    background var(--duration-fast) var(--ease-soft);
+}
+
+.custom-select__trigger:hover {
+  border-color: var(--blue-400);
+  background: rgba(20, 24, 36, 0.95);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.08) inset;
+}
+
+.custom-select__trigger:focus-visible {
+  outline: none;
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.select-wrap.is-open .custom-select__trigger {
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: rgba(20, 24, 36, 0.95);
+}
+
+.custom-select__value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select__chevron {
+  flex-shrink: 0;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  color: var(--text-muted);
+  transition: transform var(--duration-fast) var(--ease-soft), color var(--duration-fast) var(--ease-soft);
+}
+
+.select-wrap.is-open .custom-select__chevron {
+  transform: rotate(180deg);
+  color: var(--blue-500);
+}
+
+.custom-select__menu {
+  position: fixed;
+  z-index: 1000;
+  margin: 0;
+  padding: var(--space-md);
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(59, 130, 246, 0.1) inset;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.96);
+  transform-origin: top center;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    visibility var(--duration-fast);
+}
+
+.custom-select__menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.custom-select__menu::-webkit-scrollbar {
+  width: 7px;
+}
+
+.custom-select__menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-select__menu::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-select__menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6);
+  background-clip: padding-box;
+}
+
+.custom-select__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 500;
+  line-height: var(--line-height-tight);
+  transition:
+    background var(--duration-fast) var(--ease-soft),
+    color var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft);
+}
+
+.custom-select__option-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select__check {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  flex-shrink: 0;
+  color: var(--blue-400);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--duration-fast) var(--ease-soft),
+    transform var(--duration-fast) var(--ease-soft);
+}
+
+.custom-select__option:hover,
+.custom-select__option.is-focused {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2) inset;
+}
+
+.custom-select__option.is-selected {
+  background: rgba(59, 130, 246, 0.25);
+  color: var(--blue-400);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35) inset;
+}
+
+.custom-select__option.is-selected .custom-select__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Filtro de urgência — mesmas cores do picker/modal */
+.select-wrap--urgency .custom-select__option .urgency-ring {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.select-wrap--urgency .custom-select__option[data-urgency='Baixa'] .urgency-ring--lit { color: var(--green); }
+.select-wrap--urgency .custom-select__option[data-urgency='Média'] .urgency-ring--lit { color: var(--yellow); }
+.select-wrap--urgency .custom-select__option[data-urgency='Alta'] .urgency-ring--lit { color: var(--orange); }
+.select-wrap--urgency .custom-select__option[data-urgency='Crítica'] .urgency-ring--lit { color: var(--red); }
+
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Baixa'] {
+  background: var(--green-bg);
+  color: var(--green);
+  box-shadow: 0 0 0 1.5px rgba(52, 211, 153, 0.4) inset;
+}
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Baixa'] .custom-select__check { color: var(--green); }
+
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Média'] {
+  background: var(--yellow-bg);
+  color: var(--yellow);
+  box-shadow: 0 0 0 1.5px rgba(251, 191, 36, 0.4) inset;
+}
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Média'] .custom-select__check { color: var(--yellow); }
+
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Alta'] {
+  background: var(--orange-bg);
+  color: var(--orange);
+  box-shadow: 0 0 0 1.5px rgba(251, 146, 60, 0.4) inset;
+}
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Alta'] .custom-select__check { color: var(--orange); }
+
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Crítica'] {
+  background: var(--red-bg);
+  color: var(--red);
+  box-shadow: 0 0 0 1.5px rgba(248, 113, 113, 0.4) inset;
+}
+.select-wrap--urgency .custom-select__option.is-selected[data-urgency='Crítica'] .custom-select__check { color: var(--red); }
+
+.select-wrap--urgency[data-urgency='Baixa'] .custom-select__trigger { border-color: var(--green-border); }
+.select-wrap--urgency[data-urgency='Média'] .custom-select__trigger { border-color: var(--yellow-border); }
+.select-wrap--urgency[data-urgency='Alta'] .custom-select__trigger { border-color: var(--orange-border); }
+.select-wrap--urgency[data-urgency='Crítica'] .custom-select__trigger { border-color: var(--red-border); }
+
+.select-wrap--urgency .custom-select__option:hover[data-urgency='Baixa'],
+.select-wrap--urgency .custom-select__option.is-focused[data-urgency='Baixa'] {
+  background: var(--green-bg);
+  color: var(--green);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.3) inset;
+}
+.select-wrap--urgency .custom-select__option:hover[data-urgency='Média'],
+.select-wrap--urgency .custom-select__option.is-focused[data-urgency='Média'] {
+  background: var(--yellow-bg);
+  color: var(--yellow);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.3) inset;
+}
+.select-wrap--urgency .custom-select__option:hover[data-urgency='Alta'],
+.select-wrap--urgency .custom-select__option.is-focused[data-urgency='Alta'] {
+  background: var(--orange-bg);
+  color: var(--orange);
+  box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.3) inset;
+}
+.select-wrap--urgency .custom-select__option:hover[data-urgency='Crítica'],
+.select-wrap--urgency .custom-select__option.is-focused[data-urgency='Crítica'] {
+  background: var(--red-bg);
+  color: var(--red);
+  box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.3) inset;
+}
+
+/* Flip: menu acima quando não há espaço abaixo */
+.custom-select__menu.is-flip {
+  transform-origin: bottom center;
+}
+
+.custom-select__menu.is-flip:not(.is-open) {
+  transform: translateY(8px) scale(0.96);
+}

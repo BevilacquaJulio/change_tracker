@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Change Tracker — Rastreamento de itens de mudança" />
+  <title>Change Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/scrollbars.css" />
+  <link rel="stylesheet" href="css/custom-select.css" />
+  <link rel="stylesheet" href="css/form-modal.css" />
+  <link rel="stylesheet" href="css/detail-view.css" />
+  <link rel="stylesheet" href="css/lightbox.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/loading.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header__inner">
+        <div class="header__brand">
+          <h1><i data-lucide="git-branch" class="header__brand-icon"></i> Change Tracker<span id="header-project" class="header__project"></span></h1>
+        </div>
+        <div class="header__actions">
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-project-picker" title="Selecionar projeto" aria-label="Selecionar projeto">
+            <i data-lucide="folder-kanban"></i> Projeto
+          </button>
+          <a href="/docs" class="btn btn--ghost btn--sm" target="_blank" rel="noopener noreferrer" title="Documentação API">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              <line x1="8" y1="7" x2="16" y2="7" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+            Documentação API
+          </a>
+          <button type="button" class="btn btn--ghost btn--sm btn--icon" id="btn-admin-lock" hidden style="display: none" title="Área administrativa" aria-label="Área administrativa" aria-hidden="true" tabindex="-1">
+            <i data-lucide="lock"></i>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm btn--icon" id="btn-settings" title="Configurações" aria-label="Configurações">
+            <i data-lucide="settings"></i>
+          </button>
+          <button type="button" class="btn btn--primary btn--sm" id="btn-new">
+            <i data-lucide="plus"></i> Novo item
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-logout" title="Sair da conta">
+            <i data-lucide="log-out"></i> Sair
+          </button>
+          <input type="file" id="import-file" accept=".json,application/json" class="sr-only" aria-hidden="true" />
+        </div>
+      </div>
+    </header>
+
+    <div id="app-loading" class="app-loading" aria-live="polite" aria-busy="true">
+      <div class="app-loading__panel">
+        <div class="app-loading__spinner-wrap" role="status" aria-label="Carregando dados do servidor">
+          <div class="app-loading__spinner-glow" aria-hidden="true"></div>
+          <div class="app-loading__spinner" aria-hidden="true"></div>
+        </div>
+        <p class="app-loading__title">Carregando dados</p>
+        <p class="app-loading__sub">
+          Conectando ao servidor
+          <span class="app-loading__dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        </p>
+      </div>
+    </div>
+
+    <main class="main main--hidden" id="app-main">
+      <section aria-label="Resumo">
+        <h2 class="section-title">Dashboard</h2>
+        <div id="dashboard"></div>
+      </section>
+
+      <section aria-label="Filtros e listagem">
+        <h2 class="section-title">Itens de mudança</h2>
+        <div class="filters">
+          <div class="filters__row">
+            <div class="filters__group">
+              <label for="filter-type">Tipo</label>
+              <select class="form-select" id="filter-type" aria-label="Filtrar por tipo"></select>
+            </div>
+            <div class="filters__group">
+              <label for="filter-urgency">Urgência</label>
+              <select class="form-select form-select--urgency" id="filter-urgency" aria-label="Filtrar por urgência"></select>
+            </div>
+            <div class="filters__group filters__group--search">
+              <label for="filter-search">Busca</label>
+              <input type="search" id="filter-search" placeholder="Título, descrição, ação ou responsável…" autocomplete="off" />
+            </div>
+            <div class="filters__group">
+              <label for="filter-sort">Ordenar por</label>
+              <select class="form-select" id="filter-sort" aria-label="Ordenação">
+                <option value="discoveryDate:desc">Data descoberta (recente)</option>
+                <option value="discoveryDate:asc">Data descoberta (antiga)</option>
+                <option value="urgency:desc">Urgência (maior)</option>
+                <option value="urgency:asc">Urgência (menor)</option>
+                <option value="title:asc">Título (A–Z)</option>
+                <option value="title:desc">Título (Z–A)</option>
+              </select>
+            </div>
+          </div>
+          <p class="filters__count" id="filter-count" aria-live="polite">0 itens</p>
+        </div>
+
+        <div id="items-list" class="items-list" role="list"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal criar/editar -->
+  <div id="modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal modal--wide">
+      <div class="modal__header">
+        <h2 id="modal-title">Novo item de mudança</h2>
+        <button type="button" class="modal__close" id="modal-close" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="item-form" class="modal__body" novalidate>
+        <div class="form-grid form-grid--2">
+          <div class="form-field">
+            <label class="form-label" for="select-type">Tipo</label>
+            <select class="form-select" id="select-type" name="type" required></select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="input-discovery">Data da descoberta</label>
+            <input class="form-input" type="date" id="input-discovery" name="discoveryDate" required />
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="input-title">Título <span class="required">*</span></label>
+          <input class="form-input" type="text" id="input-title" name="title" required maxlength="200" placeholder="Descreva brevemente o item..." />
+          <span class="field-error" id="error-title"></span>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="input-url">URL afetada</label>
+          <div class="url-field-row">
+            <input class="form-input" type="url" id="input-url" name="url" placeholder="https://exemplo.com/pagina" />
+            <button type="button" class="btn btn--ghost btn--icon" id="btn-open-url" title="Abrir link">
+              <i data-lucide="external-link"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="input-description">O que foi encontrado</label>
+          <textarea class="form-input form-textarea" id="input-description" name="description" rows="3" placeholder="Descreva o problema ou oportunidade identificada..."></textarea>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="input-action">O que deve ser feito</label>
+          <textarea class="form-input form-textarea" id="input-action" name="actionRequired" rows="3" placeholder="Ação esperada, como corrigir ou implementar..."></textarea>
+        </div>
+        <div class="form-field">
+          <span class="form-label">Urgência <span class="required">*</span></span>
+          <input type="hidden" id="input-urgency" name="urgency" value="" />
+          <div id="urgency-picker" class="urgency-picker" role="radiogroup" aria-label="Nível de urgência"></div>
+          <span class="field-error" id="error-urgency"></span>
+        </div>
+        <div class="form-field">
+          <span class="form-label">Evidência / Screenshot</span>
+          <input type="file" id="evidence-file" class="sr-only" accept="image/png,image/jpeg,image/gif,image/webp" multiple />
+          <div id="evidence-dropzone" class="evidence-dropzone">
+            <div class="evidence-dropzone__empty" id="evidence-empty">
+              <i data-lucide="image-plus"></i>
+              <p>Arraste imagens ou clique para anexar</p>
+              <span class="evidence-dropzone__hint">PNG, JPG, GIF ou WebP — máx. 2 MB cada · até 10 arquivos</span>
+              <button type="button" class="btn btn--ghost btn--sm" id="btn-evidence-browse">
+                <i data-lucide="upload"></i> Escolher arquivos
+              </button>
+            </div>
+            <div class="evidence-gallery hidden" id="evidence-gallery">
+              <div id="evidence-carousel-host"></div>
+              <div class="evidence-gallery__actions">
+                <button type="button" class="btn btn--ghost btn--sm" id="btn-evidence-add">
+                  <i data-lucide="plus"></i> Adicionar mais
+                </button>
+                <button type="button" class="btn btn--ghost btn--sm" id="btn-evidence-remove">
+                  <i data-lucide="trash-2"></i> Remover esta
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="modal-cancel">Cancelar</button>
+        <button type="submit" form="item-form" class="btn btn--primary">
+          <i data-lucide="save"></i> Salvar item
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal detalhe -->
+  <div id="detail-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="detail-heading">
+    <div class="modal modal--wide">
+      <div class="modal__header">
+        <h2 id="detail-heading">Detalhes do item</h2>
+        <button type="button" class="modal__close" id="detail-close" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal__body" id="detail-body"></div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="detail-close-footer">Fechar</button>
+        <button type="button" class="btn btn--primary" id="detail-edit">
+          <i data-lucide="pencil"></i> Editar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal configurações -->
+  <div id="settings-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="settings-title">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="settings-title"><i data-lucide="settings"></i> Configurações</h2>
+        <button type="button" class="modal__close" id="settings-close" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="settings-form" class="modal__body settings-body">
+        <p class="settings-intro">Importe ou exporte seus dados de itens de mudança.</p>
+
+        <div>
+          <h3 style="font-size: var(--font-size-base); font-weight: 500; color: var(--text-primary); margin: 0 0 var(--space-md) 0;">Importar / Exportar</h3>
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-export">
+              <i data-lucide="download"></i> Exportar JSON
+            </button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-import">
+              <i data-lucide="upload"></i> Importar JSON
+            </button>
+          </div>
+        </div>
+
+        <p class="settings-error" id="settings-error" role="alert" aria-live="polite"></p>
+      </form>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="settings-cancel">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal selecionar projeto -->
+  <div id="project-picker-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="project-picker-title">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="project-picker-title"><i data-lucide="folder-kanban"></i> Selecionar projeto</h2>
+        <button type="button" class="modal__close" id="project-picker-close" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal__body">
+        <p class="settings-intro">Escolha um dos projetos atribuídos à sua conta.</p>
+        <div id="project-picker-list" class="project-picker-list" role="list"></div>
+        <p class="settings-error" id="project-picker-error" role="alert" aria-live="polite"></p>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="project-picker-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmação (sempre — nunca alert/confirm nativo) -->
+  <div id="confirm-overlay" class="modal-overlay confirm-overlay" aria-hidden="true" role="alertdialog" aria-labelledby="confirm-title">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="confirm-title">Confirmar ação</h2>
+      </div>
+      <div class="modal__body confirm-body">
+        <div id="confirm-icon-wrap" class="confirm-icon confirm-icon--primary" aria-hidden="true"></div>
+        <p id="confirm-message"></p>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="confirm-cancel">Cancelar</button>
+        <button type="button" class="btn btn--primary" id="confirm-ok">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox — evidência em tela cheia -->
+  <div id="lightbox-overlay" class="modal-overlay lightbox-overlay" aria-hidden="true" role="dialog" aria-label="Visualização da evidência">
+    <div class="lightbox">
+      <div class="lightbox__header">
+        <span class="lightbox__title" id="lightbox-title">Evidência</span>
+        <div class="lightbox__toolbar">
+          <span class="lightbox__zoom-label" id="lightbox-zoom-label" aria-live="polite">100%</span>
+          <button type="button" class="btn btn--ghost btn--icon btn--sm" id="lightbox-zoom-out" title="Diminuir zoom">
+            <i data-lucide="zoom-out"></i>
+          </button>
+          <button type="button" class="btn btn--ghost btn--icon btn--sm" id="lightbox-zoom-reset" title="Redefinir zoom">
+            <i data-lucide="scan"></i>
+          </button>
+          <button type="button" class="btn btn--ghost btn--icon btn--sm" id="lightbox-zoom-in" title="Aumentar zoom">
+            <i data-lucide="zoom-in"></i>
+          </button>
+          <button type="button" class="btn btn--ghost btn--icon btn--sm" id="lightbox-close" title="Fechar">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+      <div class="lightbox__stage" id="lightbox-stage">
+        <button type="button" class="lightbox__gallery-nav lightbox__gallery-nav--prev hidden" id="lightbox-prev" aria-label="Imagem anterior">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <div class="lightbox__img-wrap" id="lightbox-img-wrap">
+          <img id="lightbox-img" class="lightbox__img" alt="" draggable="false" />
+        </div>
+        <button type="button" class="lightbox__gallery-nav lightbox__gallery-nav--next hidden" id="lightbox-next" aria-label="Próxima imagem">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+      <div class="lightbox__footer">
+        <p class="lightbox__hint" id="lightbox-hint">Scroll do mouse ou botões para zoom · Arraste para mover quando ampliado · Esc para fechar</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/ui-toast.js"></script>
+  <script src="js/ui-confirm.js"></script>
+  <script src="js/ui-custom-select.js"></script>
+  <script src="js/ui-dashboard.js"></script>
+  <script src="js/ui-list.js"></script>
+  <script src="js/ui-evidence.js"></script>
+  <script src="js/ui-modal.js"></script>
+  <script src="js/ui-lightbox.js"></script>
+  <script src="js/ui-detail.js"></script>
+  <script src="js/ui-settings.js"></script>
+  <script src="js/ui-project-picker.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

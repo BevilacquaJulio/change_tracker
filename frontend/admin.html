@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Change Tracker — área administrativa" />
+  <title>Change Tracker — Administração</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/custom-select.css" />
+  <link rel="stylesheet" href="css/scrollbars.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-page-body">
+
+  <!-- Tela de cadeado (gate) -->
+  <section id="admin-gate" class="admin-gate" aria-labelledby="admin-gate-title">
+    <div class="admin-gate__backdrop" aria-hidden="true"></div>
+    <div class="admin-gate__shell">
+      <a href="/" class="admin-gate__back">
+        <i data-lucide="arrow-left"></i> Voltar ao app
+      </a>
+      <div class="admin-gate__card">
+        <div class="admin-gate__icon-ring" aria-hidden="true">
+          <div class="admin-gate__icon-glow"></div>
+          <div class="admin-gate__icon">
+            <i data-lucide="lock"></i>
+          </div>
+        </div>
+        <p class="admin-gate__eyebrow">Área exclusiva</p>
+        <h1 id="admin-gate-title" class="admin-gate__title">Administração</h1>
+        <p class="admin-gate__sub">
+          Esta seção é restrita a administradores. Confirme sua senha para continuar.
+        </p>
+        <form id="admin-unlock-form" class="admin-gate__form" novalidate>
+          <label class="admin-gate__label" for="admin-unlock-password">Senha da sua conta</label>
+          <input
+            class="admin-gate__input"
+            type="password"
+            id="admin-unlock-password"
+            autocomplete="current-password"
+            placeholder="Digite sua senha"
+            required
+          />
+          <p class="admin-gate__error" id="admin-unlock-error" role="alert" aria-live="polite"></p>
+          <button type="submit" class="admin-gate__submit" id="admin-unlock-submit">
+            <i data-lucide="unlock"></i>
+            <span>Desbloquear área admin</span>
+          </button>
+        </form>
+        <p class="admin-gate__hint">Use a mesma senha do login.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Painel administrativo -->
+  <div id="admin-panel" class="admin-page" hidden>
+    <header class="header admin-page__header">
+      <div class="header__inner">
+        <div class="header__brand">
+          <h1>
+            <i data-lucide="shield" class="header__brand-icon"></i>
+            Administração
+          </h1>
+        </div>
+        <div class="header__actions">
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-manage-projects">
+            <i data-lucide="folder-kanban"></i> Projetos
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" id="admin-refresh">
+            <i data-lucide="refresh-cw"></i> Atualizar
+          </button>
+          <a href="/" class="btn btn--ghost btn--sm">
+            <i data-lucide="arrow-left"></i> Voltar
+          </a>
+          <button type="button" class="btn btn--ghost btn--sm" id="admin-lock-again" title="Bloquear área admin">
+            <i data-lucide="lock"></i> Bloquear
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main admin-page__main">
+      <div id="admin-loading" class="admin-loading" hidden>Carregando…</div>
+
+      <!-- Solicitações pendentes -->
+      <section id="admin-pending-section" class="admin-section" hidden>
+        <div class="admin-section__head">
+          <h3>Solicitações pendentes</h3>
+          <span id="admin-pending-badge" class="admin-pending-badge" hidden>0</span>
+        </div>
+        <div id="admin-pending-body" class="admin-pending-list"></div>
+      </section>
+
+      <!-- Usuários cadastrados -->
+      <section class="admin-section">
+        <div class="admin-section__head">
+          <h3>Usuários cadastrados</h3>
+        </div>
+        <div id="admin-users-body" class="admin-users-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Gerenciar projetos -->
+  <div id="projects-modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="projects-modal-title">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="projects-modal-title">
+          <i data-lucide="folder-kanban"></i> Projetos
+        </h2>
+        <button type="button" class="modal__close" id="projects-modal-close" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal__body">
+        <form id="admin-project-form" class="admin-project-form" novalidate>
+          <input
+            class="form-input"
+            type="text"
+            id="admin-project-name"
+            placeholder="Nome do novo projeto"
+            maxlength="120"
+            required
+          />
+          <button type="submit" class="btn btn--primary btn--sm" id="admin-project-create">
+            <i data-lucide="plus"></i> Criar
+          </button>
+        </form>
+        <p class="admin-form-error" id="admin-project-error" role="alert" aria-live="polite"></p>
+        <div id="admin-projects-body" class="admin-projects-list"></div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="projects-modal-cancel">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Atribuir projetos ao usuário -->
+  <div id="assign-modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="assign-modal-title">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="assign-modal-title">
+          <i data-lucide="user-check"></i> Atribuir projetos
+        </h2>
+        <button type="button" class="modal__close" id="assign-modal-close" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal__body">
+        <p class="admin-assign-user-name" id="assign-modal-user-name"></p>
+        <div id="assign-modal-list" class="admin-assign-list"></div>
+        <p class="admin-form-error" id="assign-modal-error" role="alert" aria-live="polite"></p>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="assign-modal-cancel">Cancelar</button>
+        <button type="button" class="btn btn--primary" id="assign-modal-save">
+          <i data-lucide="save"></i> Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <div id="confirm-overlay" class="modal-overlay confirm-overlay" aria-hidden="true" role="alertdialog" aria-labelledby="confirm-title">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="confirm-title">Confirmar ação</h2>
+      </div>
+      <div class="modal__body confirm-body">
+        <div id="confirm-icon-wrap" class="confirm-icon confirm-icon--primary" aria-hidden="true"></div>
+        <p id="confirm-message"></p>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" id="confirm-cancel">Cancelar</button>
+        <button type="button" class="btn btn--primary" id="confirm-ok">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/ui-toast.js"></script>
+  <script src="js/ui-confirm.js"></script>
+  <script src="js/ui-list.js"></script>
+  <script src="js/ui-custom-select.js"></script>
+  <script src="js/ui-admin.js"></script>
+  <script src="js/admin-page.js"></script>
+</body>
+</html>

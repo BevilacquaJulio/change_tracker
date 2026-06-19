@@ -1,0 +1,14 @@
+.git
+.gitignore
+.idea
+.vscode
+**/__pycache__
+**/*.pyc
+backend/.venv
+backend/venv
+.env
+backend/storage/evidence/*
+!backend/storage/evidence/.gitkeep
+change-tracker-backup-*.json
+*.backup.json
+docs

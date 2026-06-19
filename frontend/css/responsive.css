@@ -1,0 +1,90 @@
+/* === Responsive — tablet e mobile === */
+
+@media (max-width: 1024px) {
+  .dashboard {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    top: var(--space-md);
+    padding: 0 var(--space-md);
+  }
+
+  .header__inner {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .header__actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .header__actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .main {
+    padding: var(--space-md);
+  }
+
+  .dashboard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filters__row {
+    flex-direction: column;
+  }
+
+  .filters__group,
+  .filters__group--search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .form-grid--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .modal {
+    max-height: 100vh;
+    border-radius: 0;
+    max-width: 100%;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .card-actions .btn:not(.btn--icon) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #toast-container {
+    left: var(--space-md);
+    right: var(--space-md);
+    bottom: var(--space-md);
+  }
+
+  .change-card:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}

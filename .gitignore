@@ -1,0 +1,91 @@
+# =============================================================================
+# Change Tracker
+# =============================================================================
+
+# --- Segredos e ambiente ---
+.env
+.env.*
+!.env.example
+
+# --- Frontend ---
+test-scenarios.html
+guia-backend.html
+
+# --- Python (backend) ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+backend/.venv/
+backend/venv/
+*.egg
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+*.cover
+.hypothesis/
+
+# --- Uploads / evidências (mantém a pasta vazia no repo) ---
+backend/storage/evidence/*
+!backend/storage/evidence/.gitkeep
+
+# --- Backups / exportações (podem conter dados sensíveis) ---
+change-tracker-backup-*.json
+*.backup.json
+export-*.json
+
+# --- Docker (overrides locais, não versionar) ---
+docker-compose.override.yml
+docker-compose.local.yml
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Sistema operacional ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- IDEs / editores ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Cursor — ignora cache local; regras do projeto podem ser versionadas
+.cursor/
+!.cursor/rules/
+!.cursor/rules/**
+
+# --- Node (se adicionar tooling no frontend depois) ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Temporários ---
+*.tmp
+*.temp
+.cache/

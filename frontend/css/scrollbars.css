@@ -1,0 +1,68 @@
+/* === Scrollbars — paleta escura em toda a aplicação === */
+
+html {
+  color-scheme: dark;
+  scrollbar-gutter: stable;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-hover) transparent;
+}
+
+body {
+  scrollbar-color: var(--bg-hover) var(--bg-base);
+}
+
+/* WebKit — Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(139, 146, 165, 0.35);
+  border-radius: 100px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 146, 165, 0.55);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Áreas com scroll interno — modal, listas */
+.modal__body,
+.detail-grid,
+#detail-body {
+  scrollbar-color: var(--bg-hover) var(--bg-surface);
+}
+
+.modal__body::-webkit-scrollbar-track,
+#detail-body::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+}
+
+.modal__body::-webkit-scrollbar-thumb,
+#detail-body::-webkit-scrollbar-thumb {
+  background: rgba(91, 143, 199, 0.35);
+  border: 2px solid var(--bg-surface);
+  background-clip: padding-box;
+}
+
+.modal__body::-webkit-scrollbar-thumb:hover,
+#detail-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.5);
+  background-clip: padding-box;
+}

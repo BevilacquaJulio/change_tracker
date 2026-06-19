@@ -1,0 +1,96 @@
+/* === Variables — tokens do Change Tracker Design System === */
+:root {
+  --bg-base: #0f1117;
+  --bg-surface: #171c27;
+  --bg-raised: #1e2535;
+  --bg-hover: #252d40;
+  --bg-input: #141824;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --blue-500: #3b82f6;
+  --blue-400: #60a5fa;
+  --blue-300: #93c5fd;
+  --blue-100: rgba(59, 130, 246, 0.12);
+  --blue-border: rgba(59, 130, 246, 0.35);
+
+  --text-primary: #e8eaf0;
+  --text-secondary: #9aa3b8;
+  --text-muted: #6b7389;
+  --text-blue: #60a5fa;
+
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, 0.1);
+  --red-border: rgba(248, 113, 113, 0.3);
+
+  --orange: #fb923c;
+  --orange-bg: rgba(251, 146, 60, 0.1);
+  --orange-border: rgba(251, 146, 60, 0.3);
+
+  --yellow: #fbbf24;
+  --yellow-bg: rgba(251, 191, 36, 0.1);
+  --yellow-border: rgba(251, 191, 36, 0.3);
+
+  --green: #34d399;
+  --green-bg: rgba(52, 211, 153, 0.1);
+  --green-border: rgba(52, 211, 153, 0.3);
+
+  --purple: #a78bfa;
+  --purple-bg: rgba(167, 139, 250, 0.1);
+  --purple-border: rgba(167, 139, 250, 0.3);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  /* Tipografia — escala confortável (~+15%) */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+
+  --line-height-tight: 1.35;
+  --line-height-base: 1.65;
+  --line-height-relaxed: 1.75;
+
+  /* Espaçamento */
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 14px;
+  --space-lg: 20px;
+  --space-xl: 28px;
+  --space-2xl: 40px;
+
+  /* Controles e layout */
+  --control-height: 44px;
+  --control-height-sm: 38px;
+  --control-padding-x: 16px;
+  --control-padding-y: 11px;
+  --icon-sm: 18px;
+  --icon-md: 20px;
+
+  --header-height: 64px;
+  --header-offset: 100px;
+  --touch-min: 44px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.35s;
+
+  /* aliases → tokens DS */
+  --color-base: var(--bg-base);
+  --color-surface: var(--bg-surface);
+  --color-text: var(--text-primary);
+  --color-text-muted: var(--text-secondary);
+}
