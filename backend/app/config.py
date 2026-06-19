@@ -43,12 +43,12 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> str:
-    password = quote_plus(self.mysql_password)
-
-    return (
-        f"mysql+pymysql://{self.mysql_user}:{password}"
-        f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_database}?charset=utf8mb4"
-    )
+        user = quote_plus(self.mysql_user)
+        password = quote_plus(self.mysql_password)
+        return (
+            f"mysql+pymysql://{user}:{password}"
+            f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_database}?charset=utf8mb4"
+        )
 
     @property
     def storage_dir(self) -> Path:
