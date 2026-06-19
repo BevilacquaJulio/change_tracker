@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import quote_plus
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -42,10 +43,12 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> str:
-        return (
-            f"mysql+pymysql://{self.mysql_user}:{self.mysql_password}"
-            f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_database}?charset=utf8mb4"
-        )
+    password = quote_plus(self.mysql_password)
+
+    return (
+        f"mysql+pymysql://{self.mysql_user}:{password}"
+        f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_database}?charset=utf8mb4"
+    )
 
     @property
     def storage_dir(self) -> Path:
