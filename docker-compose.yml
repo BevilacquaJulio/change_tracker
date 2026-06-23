@@ -23,7 +23,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
-      - "traefik.http.routers.change_tracker.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)"
+      - "traefik.http.routers.change_tracker.rule=Host(`${DOMAIN}`)"
       - traefik.http.routers.change_tracker.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}
       - traefik.http.routers.change_tracker.tls=true
       - traefik.http.routers.change_tracker.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-letsencrypt}
